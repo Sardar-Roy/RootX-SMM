@@ -52,6 +52,16 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--nav-bg);ba
 .section{padding:16px 16px 40px;max-width:960px;margin:0 auto}
 .section-tag{font-size:9px;font-weight:700;font-family:'DM Mono',monospace;color:var(--accent);text-transform:uppercase;letter-spacing:.16em;margin-bottom:6px}
 .section-title{font-size:clamp(18px,4vw,24px);font-weight:800;letter-spacing:-.02em;margin-bottom:16px}
+.section-sub{font-size:12px;color:var(--sub);max-width:460px;line-height:1.75;margin:-8px 0 16px}
+
+/* ── INFO CARDS (custom plans / safety) ── */
+.info-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
+.info-card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px}
+.info-icon-wrap{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:17px;margin-bottom:12px}
+.info-title{font-size:13px;font-weight:700;margin-bottom:6px;font-family:'DM Mono',monospace}
+.info-desc{font-size:11px;color:var(--sub);line-height:1.7;margin-bottom:12px}
+.info-btn{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:700;font-family:'DM Mono',monospace;color:var(--accent);text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+.info-btn:hover{color:var(--accent2)}
 
 /* ── TABS ── */
 .tabs{display:flex;gap:8px;overflow-x:auto;padding-bottom:18px;scrollbar-width:none}
@@ -147,6 +157,26 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--nav-bg);ba
   </div>
 </div>
 
+<!-- CUSTOM PLANS + SAFETY -->
+<div class="section">
+  <div class="section-tag">Good To Know</div>
+  <h2 class="section-title">Custom Plans & Account Safety</h2>
+  <div class="info-grid">
+    <div class="info-card">
+      <div class="info-icon-wrap" style="background:rgba(32,85,212,.1);color:var(--accent)"><i class="ri-settings-4-line"></i></div>
+      <div class="info-title">Custom Plans Available</div>
+      <div class="info-desc">Don't see the exact quantity or platform you need? Contact us and tell us how much you want — we'll put together a custom plan just for you.</div>
+      <div class="info-btn" id="customPlanBtn"><i class="ri-arrow-right-line"></i> Contact Us</div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon-wrap" style="background:rgba(34,197,94,.1);color:var(--green)"><i class="ri-shield-check-line"></i></div>
+      <div class="info-title">No Risk Of Account Ban</div>
+      <div class="info-desc">Our reputed/premium-tier services carry no risk of account ban. Lower-cost/bulk services use lower-quality sources and can carry some risk. Contact us directly for more info before ordering.</div>
+      <div class="info-btn" id="safetyContactBtn"><i class="ri-arrow-right-line"></i> Contact Us</div>
+    </div>
+  </div>
+</div>
+
 <div class="section" id="services">
   <div class="section-tag">Catalogue</div>
   <h2 class="section-title">All Services</h2>
@@ -180,7 +210,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:var(--nav-bg);ba
   <div class="modal">
     <div class="icon-close-btn" data-close="support"><i class="ri-close-line"></i></div>
     <h2>Contact Support</h2>
-    <p class="checkout-note">Reach out for order help, custom requests, or any issues with your service.</p>
+    <p class="checkout-note">Reach out for custom plans, account safety questions, order help, or any other issue.</p>
     <div class="contact-list">
       <a class="contact-btn" href="https://wa.me/447379725387" target="_blank"><i class="ri-whatsapp-line"></i> WhatsApp — +44 7379 725387</a>
       <a class="contact-btn" href="https://t.me/zobve" target="_blank"><i class="ri-telegram-line"></i> Telegram — @zobve</a>
@@ -216,7 +246,6 @@ const CATEGORIES = [
   {id:'googlemaps', label:'Google Maps', icon:'ri-map-pin-line'}
 ];
 
-// delivery time is now auto-derived from price — no manual 'delivery' field needed
 function getDeliveryTime(price){
   if(price <= 100) return '1-7 hours';
   if(price <= 200) return '1-5 hours';
@@ -262,7 +291,7 @@ const PRODUCTS = [
 ];
 
 let activeCategory = 'instagram';
-let cart = {}; // id -> {product, count, customText}
+let cart = {};
 let clearClickCount = 0;
 
 function setTheme(t){
@@ -359,7 +388,6 @@ function addToCart(id, customText){
   const p = PRODUCTS.find(x => x.id === id);
   if(!p) return;
   if(p.custom){
-    // custom items are always added as distinct entries so each comment text is preserved
     const uniqueKey = id + '-' + Date.now();
     cart[uniqueKey] = {product:p, count:1, customText:customText};
   } else if(cart[id]){
@@ -456,6 +484,8 @@ document.getElementById('checkoutBtn').addEventListener('click', ()=>{
 const supportOverlay = document.getElementById('supportOverlay');
 function openSupport(){ supportOverlay.classList.add('open'); }
 document.getElementById('supportBtn').addEventListener('click', openSupport);
+document.getElementById('customPlanBtn').addEventListener('click', openSupport);
+document.getElementById('safetyContactBtn').addEventListener('click', openSupport);
 
 function closeOverlay(el){ el.classList.remove('open'); }
 document.querySelectorAll('[data-close]').forEach(btn=>{
